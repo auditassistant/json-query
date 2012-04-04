@@ -1,0 +1,21 @@
+{
+  "author": "Matt McKegg <matt@wetsand.co.nz> (http://twitter.com/MattMcKegg)",
+  "name": "json-query",
+  "description": "Retrieves values from JSON contexts for data binding. Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic. Browserify compatible.",
+  "version": "0.0.0",
+  "homepage": "http://github.com/mmckegg/node-json-query",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mmckegg/node-json-query.git"
+  },
+  "main": "json-query",
+  "scripts": {
+    "test": "sh test/test.sh"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
