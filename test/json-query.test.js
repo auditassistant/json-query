@@ -140,6 +140,6 @@ function testWithContext(rootContext, contextQuery, query, tests){
 }
 
 function forceCollectionTest(context, query, tests){
-  var result = jsonQuery(query, {rootContext: context, filters: filters, forceCollection: true})
+  var result = jsonQuery(query, {rootContext: context, filters: filters, force: []})
   tests(context, result)
 }

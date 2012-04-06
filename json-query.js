@@ -43,9 +43,9 @@ function handleQuery(tokenizedQuery, options){
     if (token.get){
       var key = handleValue(token.get)
       
-      //force currentItem to be hash if it doesn't already exist and forceCollection is enabled
-      if (currentItem || (options.forceCollection && force({}))){
-        setCurrent(key, currentItem[key])        
+      //force currentItem to be hash if it doesn't already exist and force is enabled
+      if (currentItem || (options.force && force({}))){
+        setCurrent(key, currentItem[key])
       } else {
         setCurrent(key, null)
       }
@@ -53,7 +53,7 @@ function handleQuery(tokenizedQuery, options){
       
     } else if (token.select){
 
-      if (Array.isArray(currentItem) || (options.forceCollection && force([]))){
+      if (Array.isArray(currentItem) || (options.force && force([]))){
         var result = selectWithKey(currentItem, handleValue(token.select[0]), handleValue(token.select[1]))
         setCurrent(result[0], result[1])
       } else {
@@ -103,9 +103,9 @@ function handleQuery(tokenizedQuery, options){
     
   }
   
-  // force collection if the final item is not a collection and forceCollection is enabled
-  if (!currentItem && options.forceCollection){
-    force([])
+  // force collection if the final item is not a collection and force is enabled
+  if (!currentItem && options.force){
+    force(options.force)
   }
  
   function resetCurrent(){
@@ -205,7 +205,7 @@ function optionsWithItem(options, item){
     rootContext: options.rootContext,
     params: options.params,
     filters: options.filters,
-    forceCollection: options.forceCollection
+    force: options.force
   }
 }
 
