@@ -197,9 +197,9 @@ function depthSplit(text, delimiter, max){
         break;
       }
       
-    } else if (openers.indexOf(char) >= 0){
+    } else if (~openers.indexOf(char)){
       depth += 1
-    } else if (closers.indexOf(char) >= 0){
+    } else if (~closers.indexOf(char)){
       depth -= 1
     }
     

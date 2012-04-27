@@ -154,7 +154,7 @@ function handleQuery(tokenizedQuery, options){
   }
   
   function addReference(ref){
-    if (currentReferences.indexOf(ref) < 0){
+    if (!~currentReferences.indexOf(ref)){
       currentReferences.push(ref)
     }
   }

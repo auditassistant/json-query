@@ -10,10 +10,12 @@
   },
   "main": "json-query",
   "scripts": {
-    "test": "sh test/test.sh"
+    "test": "tap test/*.js"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "tap": "*"
+  },
   "optionalDependencies": {},
   "engines": {
     "node": "*"
