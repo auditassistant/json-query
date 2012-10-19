@@ -1,5 +1,5 @@
 // todo: syntax checking
-// todo: handle args
+// todo: test handle args
 
 module.exports = function(query, shouldAssignParamIds){
   var result = []

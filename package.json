@@ -10,7 +10,7 @@
   },
   "main": "json-query",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tap test/*.js --tap"
   },
   "dependencies": {},
   "devDependencies": {
