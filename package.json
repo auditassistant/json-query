@@ -3,10 +3,10 @@
   "name": "json-query",
   "description": "Retrieves values from JSON contexts for data binding. Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic. Browserify compatible.",
   "version": "0.0.0",
-  "homepage": "http://github.com/mmckegg/node-json-query",
+  "homepage": "http://github.com/mmckegg/json-query",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mmckegg/node-json-query.git"
+    "url": "git://github.com/mmckegg/json-query.git"
   },
   "main": "json-query",
   "scripts": {

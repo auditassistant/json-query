@@ -1,4 +1,4 @@
 JSON Query
 ===
 
-See http://github.com/mmckegg/node-json-context
+See http://github.com/mmckegg/json-context
