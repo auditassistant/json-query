@@ -99,8 +99,11 @@ module.exports.createController = function(options){
         // resolve references (the last item on the tree that is an object that could be bound to)
         if (controller.currentItem instanceof Object){
           controller.addReference(controller.currentItem)
-        } else if (controller.currentParents.length > 0){
-          controller.addReference(controller.currentParents[controller.currentParents.length-1].value)
+        } else {
+          var parentObject = getLastParentObject(controller.currentParents)
+          if (parentObject){
+            controller.addReference(parentObject)
+          }
         }
         callback(null, {value: controller.currentItem, key: controller.currentKey, references: controller.currentReferences, parents: controller.currentParents})
       
@@ -195,6 +198,14 @@ module.exports.lastParent = function(query){
     return last.value
   } else {
     return null
+  }
+}
+
+function getLastParentObject(parents){
+  for (var i=0;i<parents.length;i++){
+    if (!(parents[i+1]) || !(parents[i+1].value instanceof Object)){
+      return parents[i]
+    }
   }
 }
 
