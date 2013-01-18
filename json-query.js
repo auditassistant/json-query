@@ -5,6 +5,8 @@ var queryTokenizer = require('./query_tokenizer')
 
 module.exports = function(query, options){
   
+  options = cloneOptions(options || {})
+  
   // extract params for ['test[param=?]', 'value'] type queries
   if (Array.isArray(query)){
     options.params = query.slice(1)
@@ -113,6 +115,7 @@ module.exports.createController = function(options){
     // state
     options: options,
     rootContext: options.rootContext,
+    parent: options.parent,
     filters: options.filters || {},
     currentItem: options.currentItem || options.context,
     currentKey: null,
@@ -204,7 +207,7 @@ module.exports.lastParent = function(query){
 function getLastParentObject(parents){
   for (var i=0;i<parents.length;i++){
     if (!(parents[i+1]) || !(parents[i+1].value instanceof Object)){
-      return parents[i]
+      return parents[i].value
     }
   }
 }
@@ -213,6 +216,7 @@ function optionsWithoutForceAndResetCurrent(options, item){
   return {
     currentItem: options.context,
     context: options.context,
+    parent: options.parent,
     rootContext: options.rootContext,
     params: options.params,
     filters: options.filters,
@@ -223,6 +227,19 @@ function optionsWithoutForceAndResetCurrent(options, item){
 function optionsWithItem(options, item){
   return {
     currentItem: item,
+    context: options.context,
+    rootContext: options.rootContext,
+    parent: options.parent,
+    params: options.params,
+    filters: options.filters,
+    force: options.force,
+    dynamic: options.dynamic
+  }
+}
+
+function cloneOptions(options){
+  return {
+    currentItem: options.currentItem,
     context: options.context,
     rootContext: options.rootContext,
     params: options.params,

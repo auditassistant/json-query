@@ -50,7 +50,13 @@ module.exports = function(token, controller, done){
     controller.resetCurrent()
     controller.setCurrent(null, controller.options.rootContext)
     done()
-
+    
+  }else if (token.parent){
+    
+    controller.resetCurrent()
+    controller.setCurrent(null, controller.options.parent)
+    done()
+    
   } else if (token.or){
 
     if (controller.currentItem){

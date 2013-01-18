@@ -91,6 +91,10 @@ module.exports = function(query, shouldAssignParamIds){
       result.push({root:true})
     }
     
+    // parent query check
+    if (pos === 0 && (char === '.' && nextChar === '.')){
+      result.push({parent:true})
+    }
     
     var token = tokens[char]
     if (token){
