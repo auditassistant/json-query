@@ -242,10 +242,12 @@ function cloneOptions(options){
     currentItem: options.currentItem,
     context: options.context,
     rootContext: options.rootContext,
+    parent: options.parent,
     params: options.params,
     filters: options.filters,
     force: options.force,
     dynamic: options.dynamic
+
   }
 }
 
