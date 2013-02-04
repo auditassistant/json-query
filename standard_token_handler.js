@@ -15,13 +15,15 @@ module.exports = function(token, controller, done){
     
     controller.getValue(token.get, function(err, key){
       if (!err){
-        
-        if (controller.currentItem || (controller.options.force && controller.force({}))){
-          controller.setCurrent(key, controller.currentItem[key])
+        if (controller.override && controller.currentItem === controller.rootContext && controller.override[key] !== undefined){
+          controller.setCurrent(key, controller.override[key])
         } else {
-          controller.setCurrent(key, null)
+          if (controller.currentItem || (controller.options.force && controller.force({}))){
+            controller.setCurrent(key, controller.currentItem[key])
+          } else {
+            controller.setCurrent(key, null)
+          }
         }
-        
         done()
       } else {done(err)}
     })
@@ -68,11 +70,13 @@ module.exports = function(token, controller, done){
     }
 
   } else if (token.filter){
+
+    var filter = controller.getFilter(token.filter)
     
-    if (controller.filters[token.filter]){
+    if (filter){
       controller.getValues(token.args || [], function(err, values){ if (!err){
-        
-        var result = controller.filters[token.filter](controller.currentItem, {args: values, options: controller.options, references: controller.currentReferences})
+
+        var result = filter(controller.currentItem, {args: values, controller: controller, data: controller.rootContext})
         controller.setCurrent(null, result)
         done()
         

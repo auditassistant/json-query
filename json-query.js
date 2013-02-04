@@ -116,6 +116,7 @@ module.exports.createController = function(options){
     options: options,
     rootContext: options.rootContext,
     parent: options.parent,
+    override: options.override,
     filters: options.filters || {},
     currentItem: options.currentItem || options.context,
     currentKey: null,
@@ -145,6 +146,21 @@ module.exports.createController = function(options){
     }
     return !!controller.currentItem
   }
+  controller.getFilter = function(filterName){
+    if (~filterName.indexOf('/')){
+      var result = null
+      filterName.split('/').forEach(function(part, i){
+        if (i == 0){
+          result = controller.filters[part]
+        } else if (result[part]){
+          result = result[part]
+        }
+      })
+      return result
+    } else {
+      return controller.filters[filterName]
+    }
+  }
   controller.addReferences = function(references){
     if (references){
       references.forEach(controller.addReference)
@@ -162,7 +178,7 @@ module.exports.createController = function(options){
   }
   controller.getValue = function(value, callback){
     if (value._param != null){
-      callback(null, options.params[value._param]) 
+      callback(null, options.params[value._param])
     } else if (value._sub){
       
       module.exports.process(value._sub, optionsWithoutForceAndResetCurrent(options), function(err, result){ if (!err){
@@ -218,6 +234,7 @@ function optionsWithoutForceAndResetCurrent(options, item){
     context: options.context,
     parent: options.parent,
     rootContext: options.rootContext,
+    override: options.override,
     params: options.params,
     filters: options.filters,
     dynamic: options.dynamic
@@ -229,6 +246,7 @@ function optionsWithItem(options, item){
     currentItem: item,
     context: options.context,
     rootContext: options.rootContext,
+    override: options.override,
     parent: options.parent,
     params: options.params,
     filters: options.filters,
@@ -242,6 +260,7 @@ function cloneOptions(options){
     currentItem: options.currentItem,
     context: options.context,
     rootContext: options.rootContext,
+    override: options.override,
     parent: options.parent,
     params: options.params,
     filters: options.filters,

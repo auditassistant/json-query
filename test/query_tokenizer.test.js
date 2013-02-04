@@ -97,6 +97,9 @@ check("items[parent_id={workitems[{.id}=?]}].contacts[?={.items[?]}].name",[
   {get: 'name'}
 ])
 
+check(":filter/subfilter",[
+  {filter: 'filter/subfilter'}
+])
 
 
 function check(query, expected){
