@@ -178,6 +178,8 @@ jsonQuery(['people[country=?]', 'NZ'])
 
 Dynamic queries are asynchronous and can execute custom functions to get their data. It's a handy interface over the basic tokenizer.
 
+But I'm considering ditching the async queries, as this makes the whole thing way more complicated than it needs to be!
+
 ### jsonQuery.dynamic(query, options)
 
 Too complicated for me to remember!
