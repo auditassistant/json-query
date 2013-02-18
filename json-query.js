@@ -167,7 +167,7 @@ module.exports.createController = function(options){
     }
   }
   controller.addReference = function(ref){
-    if (!~controller.currentReferences.indexOf(ref)){
+    if (ref instanceof Object && !~controller.currentReferences.indexOf(ref)){
       controller.currentReferences.push(ref)
     }
   }
