@@ -2,6 +2,8 @@
 // todo: test handle args
 
 module.exports = function(query, shouldAssignParamIds){
+  if (!query) return []
+    
   var result = []
     , prevChar, char
     , nextChar = query.charAt(0)

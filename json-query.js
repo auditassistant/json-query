@@ -152,7 +152,7 @@ module.exports.createController = function(options){
       filterName.split('/').forEach(function(part, i){
         if (i == 0){
           result = controller.filters[part]
-        } else if (result[part]){
+        } else if (result && result[part]){
           result = result[part]
         }
       })
