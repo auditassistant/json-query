@@ -5,6 +5,12 @@ Retrieves values from JSON objects for data binding. Offers params, nested queri
 
 Used internally by [JSON Context](https://github.com/mmckegg/json-context) for data binding.
 
+## Install
+
+```bash
+$ npm install knob
+```
+
 ### jsonQuery(query, options)
 
 Specify a query and what to query - returns an object that describes the result of the query.
@@ -183,3 +189,7 @@ But I'm considering ditching the async queries, as this makes the whole thing wa
 ### jsonQuery.dynamic(query, options)
 
 Too complicated for me to remember!
+
+## License
+
+MIT
