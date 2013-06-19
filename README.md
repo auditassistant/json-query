@@ -8,7 +8,7 @@ Used internally by [JSON Context](https://github.com/mmckegg/json-context) for d
 ## Install
 
 ```bash
-$ npm install knob
+$ npm install json-query
 ```
 
 ### jsonQuery(query, options)
