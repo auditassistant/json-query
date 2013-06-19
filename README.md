@@ -16,6 +16,8 @@ $ npm install knob
 Specify a query and what to query - returns an object that describes the result of the query.
 
 ```js
+var jsonQuery = require('json-query')
+
 var context = {
   people: [
     {name: 'Matt', country: 'NZ'},
