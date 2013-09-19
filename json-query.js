@@ -15,7 +15,7 @@ module.exports = function(query, options){
   
   // set up context vars
   options.rootContext = options.rootContext || options.context
-  options.context = options.context || options.rootContext
+  options.context = options.context != null ? options.context : options.rootContext
   options.params = options.params || []
   options.dynamic = false
   
