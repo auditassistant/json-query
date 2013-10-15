@@ -1,6 +1,6 @@
 var assert = require('assert')
 
-var queryTokenizer = require('../query_tokenizer')
+var queryTokenizer = require('../lib/tokenize')
 
 
 check("items[id=1].name",[

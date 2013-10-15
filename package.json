@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git://github.com/mmckegg/json-query.git"
   },
-  "main": "json-query",
+  "main": "index.js",
   "scripts": {
     "test": "tap test/*.js --tap"
   },

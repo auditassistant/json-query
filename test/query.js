@@ -1,6 +1,6 @@
 var test = require('tap').test
 
-var jsonQuery = require('../json-query')
+var jsonQuery = require('../')
 
 var filters = {
   uppercase: function(input, meta){
@@ -80,11 +80,13 @@ test("Filter with iterating key query", function(t){
 
 
 test("Params with iterating key query", function(t){
-  use(rootContext, ['items[id=?].name', 1], function(c,q){
-    t.equal(q.value, 'Another item', "Correct Value")
-    t.equal(q.parents[q.parents.length-1].key, 1, "Parent Key")  
-    t.end()
+  var result = jsonQuery(['items[id=?].name', 1], {
+    rootContext: rootContext, filters: filters
   })
+
+  t.equal(result.value, 'Another item', "Correct Value")
+  t.equal(result.parents[result.parents.length-1].key, 1, "Parent Key")
+  t.end()
 })
 
 
@@ -105,11 +107,13 @@ test("Iterating key query with cross context param", function(t){
 })
 
 test("Deep query with iterating key query and specified param", function(t){
-  use(rootContext, ['grouped_stuff[][id=?].name', 347], function(c,q){
-    t.equal(q.value, 'Happy Cat', "Correct Value")
-    t.equal(q.parents[q.parents.length-1].key, 1, "Correct Key")
-    t.end()
+  var result = jsonQuery(['grouped_stuff[][id=?].name', 347], {
+    rootContext: rootContext, filters: filters
   })
+
+  t.equal(result.value, 'Happy Cat', "Correct Value")
+  t.equal(result.parents[result.parents.length-1].key, 1, "Correct Key")
+  t.end()
 })
 
 // parent tests
@@ -175,9 +179,6 @@ test("Test 'or' for iterative query", function(t){
   t.end()
 })
 
-
-//todo: force collection + deep query tests
-//  -- maybe this isn't actually possible?
 
 function use(context, query, tests){
   var result = jsonQuery(query, {rootContext: context, filters: filters})
