@@ -1,6 +1,8 @@
 JSON Query
 ===
 
+[![browser support](https://ci.testling.com/mmckegg/json-query.png)](https://ci.testling.com/mmckegg/json-query)
+
 Retrieves values from JSON objects for data binding. Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic.
 
 Used internally by [JSON Context](https://github.com/mmckegg/json-context) for data binding.

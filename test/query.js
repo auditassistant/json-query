@@ -1,5 +1,6 @@
-var test = require('tap').test
+require('es5-shim')
 
+var test = require('tape')
 var jsonQuery = require('../')
 
 var filters = {

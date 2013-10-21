@@ -12,9 +12,9 @@
   "scripts": {
     "test": "tap test/*.js --tap"
   },
-  "dependencies": {},
   "devDependencies": {
-    "tap": "*"
+    "tape": "*",
+    "es5-shim": "~2.1.0"
   },
   "optionalDependencies": {},
   "engines": {
@@ -25,5 +25,29 @@
     "filter",
     "json",
     "query"
-  ]
+  ],
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "chrome/10.0",
+      "chrome/25.0",
+      "chrome/latest",
+      "chrome/canary",
+      "firefox/3.6",
+      "firefox/20.0",
+      "firefox/latest",
+      "firefox/nightly",
+      "opera/12.0",
+      "opera/latest",
+      "safari/4.0",
+      "safari/latest",
+      "opera/next",
+      "iphone/6.0..latest",
+      "ipad/6.0..latest",
+      "safari/6.0..latest",
+      "android-browser/4.2..latest",
+      "iexplore/6.0",
+      "iexplore/9.0..latest"
+    ]
+  }
 }
