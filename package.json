@@ -29,7 +29,7 @@
   "testling": {
     "files": "test/*.js",
     "browsers": [
-      "chrome/10.0",
+      "chrome/20.0",
       "chrome/25.0",
       "chrome/latest",
       "chrome/canary",
