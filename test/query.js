@@ -1,4 +1,4 @@
-require('es5-shim')
+require('es5-shim') 
 
 var test = require('tape')
 var jsonQuery = require('../')
