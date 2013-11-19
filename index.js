@@ -1,6 +1,7 @@
 var State = require('./lib/state')
 var tokenize = require('./lib/tokenize')
 
+var tokenizedCache = {}
 
 module.exports = function(query, options){
 
@@ -10,8 +11,12 @@ module.exports = function(query, options){
     params = query.slice(1)
     query = query[0]
   }
- 
-  return handleQuery(tokenize(query, !!params), options, params)
+
+  if (!tokenizedCache[query]){
+    tokenizedCache[query] = tokenize(query, true)
+  }
+
+  return handleQuery(tokenizedCache[query], options, params)
 }
 
 
@@ -124,9 +129,9 @@ function handleToken(token, state){
 
       if (result){
         state.setCurrent(result.key, result.value)
-        result.parents.forEach(function(parent){
-          state.currentParents.push(parent)
-        })
+        for (var i=0;i<result.parents.length;i++){
+          state.currentParents.push(result.parents[i])
+        }
       } else {
         state.setCurrent(null, null)
       }      
