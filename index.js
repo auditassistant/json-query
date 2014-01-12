@@ -119,7 +119,7 @@ function handleToken(token, state){
     
     if (filter){
       var values = state.getValues(token.args || [])
-      var result = filter(state.currentItem, {args: values, state: state, data: state.rootContext})
+      var result = filter.call(state.options, state.currentItem, {args: values, state: state, data: state.rootContext})
       state.setCurrent(null, result)
     }
 
