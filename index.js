@@ -3,7 +3,7 @@ var tokenize = require('./lib/tokenize')
 
 var tokenizedCache = {}
 
-module.exports = function(query, options){
+module.exports = function jsonQuery(query, options){
 
   // extract params for ['test[param=?]', 'value'] type queries
   var params = options && options.params || null
@@ -32,7 +32,7 @@ module.exports.lastParent = function(query){
 
 function handleQuery (tokens, options, params){
 
-  var state = State(options, params, handleQuery)
+  var state = new State(options, params, handleQuery)
 
   for (var i=0;i<tokens.length;i++) {
     if (handleToken(tokens[i], state)){
