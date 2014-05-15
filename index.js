@@ -115,12 +115,21 @@ function handleToken(token, state){
 
   } else if (token.filter){
 
-    var filter = state.getFilter(token.filter)
-    
-    if (filter){
+    var local = state.getLocal(token.filter)
+
+    if (typeof local === 'function'){
+      // function(input, args...)
       var values = state.getValues(token.args || [])
-      var result = filter.call(state.options, state.currentItem, {args: values, state: state, data: state.rootContext})
+      var result = local.apply(state.options, [state.currentItem].concat(values))
       state.setCurrent(null, result)
+    } else {
+      // fallback to global filters
+      var filter = state.getFilter(token.filter)
+      if (typeof filter === 'function'){
+        var values = state.getValues(token.args || [])
+        var result = filter.call(state.options, state.currentItem, {args: values, state: state, data: state.rootContext})
+        state.setCurrent(null, result)
+      }
     }
 
   } else if (token.deep){
