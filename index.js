@@ -97,7 +97,7 @@ function handleToken(token, state){
   } else if (token.root){
     
     state.resetCurrent()
-    state.setCurrent(null, state.options.rootContext)
+    state.setCurrent(null, state.rootContext)
     
   } else if (token.parent){
     
@@ -110,7 +110,7 @@ function handleToken(token, state){
       return true
     } else {
       state.resetCurrent()
-      state.setCurrent(null, state.options.context)
+      state.setCurrent(null, state.context)
     }
 
   } else if (token.filter){

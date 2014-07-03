@@ -180,6 +180,18 @@ test("Test 'or' for iterative query", function(t){
   t.end()
 })
 
+test("Use options.source instead of context", function(t){
+  withSource(rootContext, 'items[id=2]', '.description|.name', function(c,q){
+    t.equal(q.value, "Financially", "Correct Value for second")
+    t.equal(q.value, rootContext.items[2].description)
+  })
+  withSource(rootContext, 'items[id=1]', '.description|.name', function(c,q){
+    t.equal(q.value, "Another item", "Correct Value for first")
+    t.equal(q.value, rootContext.items[1].name)
+  })
+  t.end()
+})
+
 
 function use(context, query, tests){
   var result = jsonQuery(query, {rootContext: context, filters: filters})
@@ -189,6 +201,12 @@ function use(context, query, tests){
 function withContext(rootContext, contextQuery, query, tests){
   var contextResult = jsonQuery(contextQuery, {rootContext: rootContext}).value
   var result = jsonQuery(query, {rootContext: rootContext, context: contextResult, filters: filters})
+  tests(rootContext, result)
+}
+
+function withSource(rootContext, contextQuery, query, tests){
+  var source = jsonQuery(contextQuery, {rootContext: rootContext}).value
+  var result = jsonQuery(query, {rootContext: rootContext, source: source, filters: filters})
   tests(rootContext, result)
 }
 

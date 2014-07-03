@@ -36,6 +36,13 @@ test('query parsing', function(t){
     {get: 'name'}
   ])
 
+  check(".title|.value.name",[
+    {get: 'title'},
+    {or: true},
+    {get: 'value'},
+    {get: 'name'}
+  ])
+
   check("items[id=?].name",[
     {root: true},
     {get: 'items'},
