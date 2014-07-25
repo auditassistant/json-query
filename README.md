@@ -20,7 +20,7 @@ Specify a query and what to query - returns an object that describes the result 
 ```js
 var jsonQuery = require('json-query')
 
-var context = {
+var data = {
   people: [
     {name: 'Matt', country: 'NZ'},
     {name: 'Pete', country: 'AU'}
@@ -28,16 +28,16 @@ var context = {
 }
 
 jsonQuery('people[country=NZ].name', {
-  rootContext: context
+  data: data
 }) //=> {value: 'Matt', parents: [...], key: 0} ... etc
 ```
 
 #### options:
 
-- **rootContext**: The main JS object to query.
-- **context** (optional): The current object we're interested in. Is accessed in query by starting with `.`
+- **data** or **rootContext**: The main JS object to query.
+- **source** or **context** (optional): The current object we're interested in. Is accessed in query by starting with `.`
 - **parent** (optional): An additional context for looking further up the tree. Is accessed by `..`
-- **filters**: Specify an object containing filter functions. Accessed by ':filterName'
+- **locals**: Specify an object containing helper functions. Accessed by ':filterName'. Expects function(input, args...) with `this` set to original passed in options.
 - **force** (optional): Specify an object to be returned from the query if the query fails - it will be saved into the place the query expected the object to be.
 
 ## Queries
@@ -65,7 +65,7 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 Search through multiple levels of Objects/Arrays
 
 ```js
-var context = {
+var data = {
   grouped_people: {
     'friends': [
       {name: 'Steve', country: 'NZ'},
@@ -77,12 +77,12 @@ var context = {
   }
 }
 
-jsonQuery('grouped_people[][country=NZ]', {rootContext: context})
+jsonQuery('grouped_people[][country=NZ]', {data: data})
 ```
 ### Inner queries
 
 ```js
-var context = {
+var data = {
   page: {
     id: 'page_1',
     title: 'Test'
@@ -95,17 +95,17 @@ var context = {
 }
 
 // get the comments that match page's id
-jsonQuery('comments_lookup[{page.id}]', {rootContext: context})
+jsonQuery('comments_lookup[{page.id}]', {data: data})
 ```
 
-### Filter functions
+### Local functions (helpers)
 
 Allows to to hack the query system to do just about anything.
 
 Some nicely contrived examples:
 
 ```js
-var filters = {
+var locals = {
   greetingName: function(input){
     if (input.knownAs){
       return input.known_as
@@ -114,22 +114,22 @@ var filters = {
     }
   }
   },
-  and: function(input, params){
-    return input && params.args[0]
+  and: function(inputA, inputB){
+    return inputA && inputB
   },
-  text: function(input, params){
-    return params.args[0]
+  text: function(input, text){
+    return text
   },
-  then: function(input, params){
+  then: function(input, thenValue, elseValue){
     if (input){
-      return params.args[0]
+      return thenValue
     } else {
-      return params.args[1]
+      return elseValue
     }
   }
 }
 
-var context = {
+var data = {
   is_fullscreen: true,
   is_playing: false,
   user: {
@@ -139,22 +139,22 @@ var context = {
 }
 
 jsonQuery('user:greetingName', {
-  rootContext: context, filters: filters
+  data: data, locals: locals
 }).value //=> "Matt"
 
 jsonQuery(['is_fullscreen:and({is_playing}):then(?, ?)', "Playing big!", "Not so much"], {
-  rootContext: context, filters: filters
+  data: data, locals: locals
 }).value //=> "Not so much"
 
 jsonQuery(':text(This displays text cos we made it so)', {
-  filters: filters
+  locals: locals
 }).value //=> "This displays text cos we made it so"
 
 ```
 
 ### Context
 
-Specifying context ('rootContext', 'context', and 'parent' options) is good for databinding and working on a specific object and still keeping the big picture available.
+Specifying context ('data', 'source', and 'parent' options) is good for databinding and working on a specific object and still keeping the big picture available.
 
 ```js
 var data = {
@@ -170,8 +170,8 @@ var data = {
 
 var pageHtml = ''
 data.paragraphs.forEach(function(paragraph){
-  var style = jsonQuery('styles[{.style}]', {rootContext: data, context: paragraph}).value
-  var content = jsonQuery('.content', rootContext: data, context: paragraph) // pretty pointless :)
+  var style = jsonQuery('styles[{.style}]', {data: data, source: paragraph}).value
+  var content = jsonQuery('.content', data: data, source: paragraph) // pretty pointless :)
   pageHtml += "<p style='" + style "'>" + content + "</p>"
 })
 ```
