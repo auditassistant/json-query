@@ -114,16 +114,14 @@ function handleToken(token, state){
     }
 
   } else if (token.filter){
-
-    var local = state.getLocal(token.filter)
-
-    if (typeof local === 'function'){
+    var helper = state.getLocal(token.filter) || state.getGlobal(token.filter)
+    if (typeof helper === 'function'){
       // function(input, args...)
       var values = state.getValues(token.args || [])
-      var result = local.apply(state.options, [state.currentItem].concat(values))
+      var result = helper.apply(state.options, [state.currentItem].concat(values))
       state.setCurrent(null, result)
     } else {
-      // fallback to global filters
+      // fallback to old filters
       var filter = state.getFilter(token.filter)
       if (typeof filter === 'function'){
         var values = state.getValues(token.args || [])
@@ -131,7 +129,6 @@ function handleToken(token, state){
         state.setCurrent(null, result)
       }
     }
-
   } else if (token.deep){
     if (state.currentItem){
       var result = state.deepQuery(state.currentItem, token.deep, state.options)

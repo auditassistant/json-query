@@ -38,6 +38,7 @@ jsonQuery('people[country=NZ].name', {
 - **source** or **context** (optional): The current object we're interested in. Is accessed in query by starting with `.`
 - **parent** (optional): An additional context for looking further up the tree. Is accessed by `..`
 - **locals**: Specify an object containing helper functions. Accessed by ':filterName'. Expects function(input, args...) with `this` set to original passed in options.
+- **globals**: Falls back to globals when no local function found.
 - **force** (optional): Specify an object to be returned from the query if the query fails - it will be saved into the place the query expected the object to be.
 
 ## Queries
