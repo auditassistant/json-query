@@ -17,6 +17,14 @@ test('query parsing', function(t){
     {get: 'name'}
   ])
 
+  // test for whitespace handling
+  check(" items[id=1]\n  .name ",[
+    {root: true},
+    {get: 'items'},
+    {select: ['id', '1']},
+    {get: 'name'}
+  ])
+
   check("items[][id=1].name",[
     {root: true},
     {get: 'items'},
