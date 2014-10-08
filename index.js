@@ -95,9 +95,13 @@ function handleToken(token, state){
     }
     
   } else if (token.root){
-    
+
     state.resetCurrent()
-    state.setCurrent(null, state.rootContext)
+    if (token.args && token.args.length){
+      state.setCurrent(null, state.getValue(token.args[0]))
+    } else {
+      state.setCurrent(null, state.rootContext)
+    }
     
   } else if (token.parent){
     
