@@ -103,6 +103,11 @@ test('query parsing', function(t){
     ]}]}
   ])
 
+  check(".name:split(,)", [
+    {get: 'name'},
+    {filter: 'split', args: [',']}
+  ])
+
   check("items[id={.id}].name",[
     {root: true},
     {get: 'items'},
