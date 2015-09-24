@@ -108,7 +108,7 @@ Some nicely contrived examples:
 ```js
 var locals = {
   greetingName: function(input){
-    if (input.knownAs){
+    if (input.known_as){
       return input.known_as
     } else {
       return input.name
