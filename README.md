@@ -113,7 +113,6 @@ var locals = {
     } else {
       return input.name
     }
-  }
   },
   and: function(inputA, inputB){
     return inputA && inputB
