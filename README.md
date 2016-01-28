@@ -55,7 +55,11 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 
 ### Array filter
 
-`people[country=NZ]`
+By value: `people[country=NZ]`
+
+By RegExp: `people[name~/^R/i]`
+
+You may also negate with `!=` or `!~`.
 
 ### Or syntax
 

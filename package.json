@@ -10,7 +10,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.js --tap"
+    "test": "tape test/*.js --tap"
   },
   "devDependencies": {
     "tape": "*",
