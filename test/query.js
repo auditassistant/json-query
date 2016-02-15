@@ -43,6 +43,8 @@ var rootContext = {
   }
 }
 
+regExpOpts = { rootContext: rootContext, allowRegexp: true }
+
 test("Simple Root Key Query", function(t){
   use(rootContext, 'current_item', function(c,q){
     t.equal(q.value, 3, "Correct Value")
@@ -121,21 +123,30 @@ test("negate select", function(t){
 })
 
 test("RegExp filtering", function(t){
-  var result = jsonQuery('items[name~/^T/].name', { rootContext: rootContext })
+  var result = jsonQuery('items[name~/^T/].name', regExpOpts)
 
   t.equal(result.value, 'Tickled')
   t.end()
 })
 
+test("RegExp filtering whitout allowRegexp throw error", function(t){
+  try {
+    jsonQuery('items[name~/^T/].name', { rootContext: rootContext })
+  } catch(err) {
+    t.equal(err.message, 'options.allowRegexp is not enabled.')
+    t.end()
+  }
+})
+
 test("RegExp filtering with mode", function(t){
-  var result = jsonQuery('items[name~/^T/i].name', { rootContext: rootContext })
+  var result = jsonQuery('items[name~/^T/i].name', regExpOpts)
 
   t.equal(result.value, 'test')
   t.end()
 })
 
 test("Negate RegExp filtering", function(t){
-  var result = jsonQuery('items[name!~/^t/].name', { rootContext: rootContext })
+  var result = jsonQuery('items[name!~/^t/].name', regExpOpts)
 
   t.equal(result.value, 'Another item')
   t.end()

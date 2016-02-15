@@ -40,6 +40,7 @@ jsonQuery('people[country=NZ].name', {
 - **locals**: Specify an object containing helper functions. Accessed by ':filterName'. Expects function(input, args...) with `this` set to original passed in options.
 - **globals**: Falls back to globals when no local function found.
 - **force** (optional): Specify an object to be returned from the query if the query fails - it will be saved into the place the query expected the object to be.
+- **allowRegexp** (optional): enable `~` operator. Before enabling regexp match to anyone, consider the [user defined regular expression security concerns](http://stackoverflow.com/questions/20928677/user-defined-regular-expression-security-concerns).
 
 ## Queries
 

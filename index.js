@@ -96,6 +96,7 @@ function handleToken(token, state){
     
   } else if (token.selectMatch){
     
+    if (!state.options.allowRegexp) throw new Error('options.allowRegexp is not enabled.');
     if (Array.isArray(state.currentItem) || (state.options.force && state.force([]))){
       var values = state.getValues(token.selectMatch)
       var result = selectMatchWithKey(state.currentItem, values[0], values[1])
