@@ -13,12 +13,12 @@ var filters = {
 
 var rootContext = {
   items: [
-    {id: 0, name: 'test'},
-    {id: 1, name: 'Another item'},
-    {id: 2, name: 'Tickled', description: "Financially"},
-    {id: 3, name: 'Cat'},
-    {id: 4, name: 'Dog'},
-    {id: 5, name: 'Chicken'}
+    {id: 0, name: 'test',         group: 'A'},
+    {id: 1, name: 'Another item', group: 'A'},
+    {id: 2, name: 'Tickled',      group: 'A', description: "Financially"},
+    {id: 3, name: 'Cat',          group: 'B'},
+    {id: 4, name: 'Dog',          group: 'B'},
+    {id: 5, name: 'Chicken',      group: 'B'}
   ],
   current_item: 3,
   workitem: {
@@ -43,6 +43,8 @@ var rootContext = {
   }
 }
 
+regExpOpts = { rootContext: rootContext, allowRegexp: true }
+
 test("Simple Root Key Query", function(t){
   use(rootContext, 'current_item', function(c,q){
     t.equal(q.value, 3, "Correct Value")
@@ -59,7 +61,6 @@ test("Simple local key query", function(t){
   })
 })
 
-
 test("Single level iterating key query", function(t){
   use(rootContext, 'items[id=2].name', function(c,q){
     t.equal(q.value, 'Tickled', "Correct Value")
@@ -68,7 +69,6 @@ test("Single level iterating key query", function(t){
     t.end()
   })
 })
-
 
 test("Filter with iterating key query", function(t){
   use(rootContext, 'items[id=2].name:uppercase', function(c,q){
@@ -79,7 +79,6 @@ test("Filter with iterating key query", function(t){
   })  
 })
 
-
 test("Params with iterating key query", function(t){
   var result = jsonQuery(['items[id=?].name', 1], {
     rootContext: rootContext, filters: filters
@@ -89,7 +88,6 @@ test("Params with iterating key query", function(t){
   t.equal(result.parents[result.parents.length-1].key, 1, "Parent Key")
   t.end()
 })
-
 
 test("Cross context params", function(t){
   use(rootContext, 'items[id={current_item}].name', function(c,q){
@@ -114,6 +112,43 @@ test("Deep query with iterating key query and specified param", function(t){
 
   t.equal(result.value, 'Happy Cat', "Correct Value")
   t.equal(result.parents[result.parents.length-1].key, 1, "Correct Key")
+  t.end()
+})
+
+test("negate select", function(t){
+  var result = jsonQuery('items[group!=A].name', { rootContext: rootContext })
+
+  t.equal(result.value, 'Cat')
+  t.end()
+})
+
+test("RegExp filtering", function(t){
+  var result = jsonQuery('items[name~/^T/].name', regExpOpts)
+
+  t.equal(result.value, 'Tickled')
+  t.end()
+})
+
+test("RegExp filtering whitout allowRegexp throw error", function(t){
+  try {
+    jsonQuery('items[name~/^T/].name', { rootContext: rootContext })
+  } catch(err) {
+    t.equal(err.message, 'options.allowRegexp is not enabled.')
+    t.end()
+  }
+})
+
+test("RegExp filtering with mode", function(t){
+  var result = jsonQuery('items[name~/^T/i].name', regExpOpts)
+
+  t.equal(result.value, 'test')
+  t.end()
+})
+
+test("Negate RegExp filtering", function(t){
+  var result = jsonQuery('items[name!~/^t/].name', regExpOpts)
+
+  t.equal(result.value, 'Another item')
   t.end()
 })
 

@@ -94,6 +94,17 @@ function handleToken(token, state){
       state.setCurrent(null, null)
     }
     
+  } else if (token.selectMatch){
+    
+    if (!state.options.allowRegexp) throw new Error('options.allowRegexp is not enabled.');
+    if (Array.isArray(state.currentItem) || (state.options.force && state.force([]))){
+      var values = state.getValues(token.selectMatch)
+      var result = selectMatchWithKey(state.currentItem, values[0], values[1])
+      state.setCurrent(result[0], result[1])
+    } else {
+      state.setCurrent(null, null)
+    }
+    
   } else if (token.root){
 
     state.resetCurrent()
@@ -153,9 +164,30 @@ function handleToken(token, state){
 }
 
 function selectWithKey(source, key, value){
+  var compare = function(a,b){ return a == b };
+  if (key.charAt(key.length-1)==='!') {
+    key = key.slice(0, -1);
+    compare = function(a,b){ return a != b };
+  }
   if (source && source.length){
     for (var i=0;i<source.length;i++){
-      if (source[i][key] == value){
+      if (compare(source[i][key], value)){
+        return [i, source[i]]
+      }
+    }
+  }
+  return [null, null]
+}
+
+function selectMatchWithKey(source, key, regExp){
+  var valid = function(val){ return val };
+  if (key.charAt(key.length-1)==='!') {
+    key = key.slice(0, -1);
+    valid = function(val){ return !val };
+  }
+  if (source && source.length){
+    for (var i=0;i<source.length;i++){
+      if (valid(regExp.test(source[i][key]))){
         return [i, source[i]]
       }
     }
