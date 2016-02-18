@@ -78,7 +78,13 @@ function handleToken(token, state){
       state.setCurrent(key, state.override[key])
     } else {
       if (state.currentItem || (state.options.force && state.force({}))){
-        state.setCurrent(key, state.currentItem[key])
+        if (state.currentItem instanceof Array && parseInt(key) != key){
+          state.setCurrent(key, state.currentItem.map(function(item){
+            return item[key]
+          }))
+        } else {
+          state.setCurrent(key, state.currentItem[key])
+        }
       } else {
         state.setCurrent(key, null)
       }
@@ -146,6 +152,9 @@ function handleToken(token, state){
     }
   } else if (token.deep){
     if (state.currentItem){
+      if (token.deep.length === 0){
+        return
+      }
       var result = state.deepQuery(state.currentItem, token.deep, state.options)
 
       if (result){
