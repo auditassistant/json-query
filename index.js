@@ -79,9 +79,16 @@ function handleToken(token, state){
     } else {
       if (state.currentItem || (state.options.force && state.force({}))){
         if (state.currentItem instanceof Array && parseInt(key) != key){
-          state.setCurrent(key, state.currentItem.map(function(item){
-            return item[key]
-          }))
+          var result = []
+          state.currentItem.forEach(function(item){
+            var value = item[key]
+            if (value instanceof Array) {
+              result = result.concat(value)
+            } else {
+              result.push(value)
+            }
+          })
+          state.setCurrent(key, result)
         } else {
           state.setCurrent(key, state.currentItem[key])
         }
