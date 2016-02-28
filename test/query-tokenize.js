@@ -17,6 +17,20 @@ test('query parsing', function(t){
     {get: 'name'}
   ])
 
+  check("items[*country=NZ].name",[
+    {root: true},
+    {get: 'items'},
+    {select: ['country', 'NZ'], multiple: true},
+    {get: 'name'}
+  ])
+
+  check("items[*name!~/^t/i].name",[
+    {root: true},
+    {get: 'items'},
+    {select: ['name', /^t/i], multiple: true, negate: true, regExp: true},
+    {get: 'name'}
+  ])
+
   // test for whitespace handling
   check(" items[id=1]\n  .name ",[
     {root: true},
@@ -72,7 +86,7 @@ test('query parsing', function(t){
     {get: 'items'},
     {select: ['parent_id', {_sub: [
       {root: true},
-      {get: 'workitem'}, 
+      {get: 'workitem'},
       {get: 'id'}
     ]}]},
     {get: 'name'}
@@ -122,7 +136,7 @@ test('query parsing', function(t){
     {get: 'items'},
     {select: ['parent_id', {_sub: [
       {root: true},
-      {get: 'workitems'}, 
+      {get: 'workitems'},
       {select: [{_sub: [{get: 'id'}]}, {_param: 0}]}
     ]}]},
     {get: 'contacts'},

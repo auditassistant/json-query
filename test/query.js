@@ -1,4 +1,4 @@
-require('es5-shim') 
+require('es5-shim')
 
 var test = require('tape')
 var jsonQuery = require('../')
@@ -43,7 +43,7 @@ var rootContext = {
   }
 }
 
-regExpOpts = { rootContext: rootContext, allowRegexp: true }
+var regExpOpts = { rootContext: rootContext, allowRegexp: true }
 
 test("Simple Root Key Query", function(t){
   use(rootContext, 'current_item', function(c,q){
@@ -65,7 +65,7 @@ test("Single level iterating key query", function(t){
   use(rootContext, 'items[id=2].name', function(c,q){
     t.equal(q.value, 'Tickled', "Correct Value")
     t.equal(q.key, 'name', "Correct Key")
-    t.equal(q.parents[q.parents.length-1].key, 2, "Parent Key")  
+    t.equal(q.parents[q.parents.length-1].key, 2, "Parent Key")
     t.end()
   })
 })
@@ -73,10 +73,10 @@ test("Single level iterating key query", function(t){
 test("Filter with iterating key query", function(t){
   use(rootContext, 'items[id=2].name:uppercase', function(c,q){
     t.equal(q.value, 'TICKLED', "Correct Value")
-    t.equal(q.parents[q.parents.length-2].key, 2, "Parent Key")  
+    t.equal(q.parents[q.parents.length-2].key, 2, "Parent Key")
     t.equal(q.key, null, "Correct Key")
     t.end()
-  })  
+  })
 })
 
 test("Params with iterating key query", function(t){
@@ -227,6 +227,72 @@ test("Use options.source instead of context", function(t){
   t.end()
 })
 
+// multiple result tests
+test('accessing keys on arrays plucks values', function (t) {
+  use(rootContext, 'items.name', function (c, q) {
+    t.deepEqual(q.value, ['test', 'Another item', 'Tickled', 'Cat', 'Dog', 'Chicken'], 'Correct Value')
+    t.deepEqual(q.parents, [
+      { value: rootContext,
+        key: null
+      },
+      { value: rootContext.items,
+        key: 'items'
+      }
+    ], 'correct parents')
+    t.end()
+  })
+})
+
+test('multiple selector', function (t) {
+  use(rootContext, 'items[*group=A]', function (c, q) {
+    t.deepEqual(q.value, [rootContext.items[0], rootContext.items[1], rootContext.items[2]], 'Correct Value')
+    t.deepEqual(q.parents, [
+      { value: rootContext,
+        key: null
+      },
+      { value: rootContext.items,
+        key: 'items'
+      }
+    ], 'correct parents')
+    t.end()
+  })
+})
+
+test('multiple selector with array pluck', function (t) {
+  use(rootContext, 'items[*group=A].name', function (c, q) {
+    t.deepEqual(q.value, ['test', 'Another item', 'Tickled'], 'Correct Value')
+    t.deepEqual(q.parents, [
+      { value: rootContext,
+        key: null
+      },
+      { value: rootContext.items,
+        key: 'items'
+      },
+      { value: [rootContext.items[0], rootContext.items[1], rootContext.items[2]],
+        key: [0, 1, 2]
+      }
+    ], 'correct parents')
+    t.end()
+  })
+})
+
+test('negated multiple selector with array pluck', function (t) {
+  use(rootContext, 'items[*group!=A].name', function (c, q) {
+    t.deepEqual(q.value, ['Cat', 'Dog', 'Chicken'], 'Correct Value')
+    t.deepEqual(q.parents, [
+      { value: rootContext,
+        key: null
+      },
+      { value: rootContext.items,
+        key: 'items'
+      },
+      { value: [rootContext.items[3], rootContext.items[4], rootContext.items[5]],
+        key: [3, 4, 5]
+      }
+    ], 'correct parents')
+    t.end()
+  })
+})
 
 function use(context, query, tests){
   var result = jsonQuery(query, {rootContext: context, filters: filters})

@@ -23,7 +23,8 @@ var jsonQuery = require('json-query')
 var data = {
   people: [
     {name: 'Matt', country: 'NZ'},
-    {name: 'Pete', country: 'AU'}
+    {name: 'Pete', country: 'AU'},
+    {name: 'Mikey', country: 'NZ'}
   ]
 }
 
@@ -54,13 +55,27 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 
 `people[0]`
 
+## Array pluck
+
+`people[].name` => return all the names of people
+
 ### Array filter
 
-By value: `people[country=NZ]`
+By default **only the first** matching item will be returned:
 
-By RegExp: `people[name~/^R/i]`
+`people[name=Matt]``
 
-You may also negate with `!=` or `!~`.
+But if you add an asterisk (`*`), **all** matching items will be returned:
+
+`people[*country=NZ]`
+
+If `options.enableRegexp` is enabled, you can use the `~` operator to match `RegExp`:
+
+`people[*name~/^R/i]`
+
+You can also **negate** any of the above examples by adding a `!` before the `=` or `~`:
+
+`people[*country!=NZ]`
 
 ### Or syntax
 
