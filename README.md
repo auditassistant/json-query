@@ -1,13 +1,9 @@
-JSON Query
+json-query
 ===
-
-[![browser support](https://ci.testling.com/mmckegg/json-query.png)](https://ci.testling.com/mmckegg/json-query)
 
 Retrieves values from JSON objects for data binding. Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic.
 
-Used internally by [JSON Context](https://github.com/mmckegg/json-context) for data binding.
-
-## Install
+## Install via [npm](https://www.npmjs.com/package/json-query)
 
 ```bash
 $ npm install json-query
@@ -55,7 +51,7 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 
 `people[0]`
 
-## Array pluck
+### Array pluck
 
 `people[].name` => return all the names of people
 
@@ -63,7 +59,7 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 
 By default **only the first** matching item will be returned:
 
-`people[name=Matt]``
+`people[name=Matt]`
 
 But if you add an asterisk (`*`), **all** matching items will be returned:
 
