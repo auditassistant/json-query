@@ -9,12 +9,17 @@ Retrieves values from JSON objects for data binding. Offers params, nested queri
 $ npm install json-query
 ```
 
+## API
+
+```js
+var jsonQuery = require('json-query')
+```
+
 ### jsonQuery(query, options)
 
 Specify a query and what to query - returns an object that describes the result of the query.
 
 ```js
-var jsonQuery = require('json-query')
 
 var data = {
   people: [
