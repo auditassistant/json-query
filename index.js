@@ -75,9 +75,13 @@ function handleToken (token, state) {
     } else {
       if (state.currentItem || (state.options.force && state.force({}))) {
         if (isDeepAccessor(state.currentItem, key) || token.multiple) {
-          state.setCurrent(key, state.currentItem.map(function (item) {
+          var values = state.currentItem.map(function (item) {
             return item[key]
-          }))
+          }).filter(isDefined)
+
+          values = Array.prototype.concat.apply([], values) // flatten
+
+          state.setCurrent(key, values)
         } else {
           state.setCurrent(key, state.currentItem[key])
         }
@@ -186,6 +190,10 @@ function matches (item, opts) {
   }
 
   return result
+}
+
+function isDefined(value) {
+  return typeof value !== 'undefined'
 }
 
 function shouldOverride (state, key) {
