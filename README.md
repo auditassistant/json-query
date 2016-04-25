@@ -127,7 +127,7 @@ Allows to to hack the query system to do just about anything.
 Some nicely contrived examples:
 
 ```js
-var locals = {
+var helpers = {
   greetingName: function(input){
     if (input.known_as){
       return input.known_as
@@ -160,17 +160,40 @@ var data = {
 }
 
 jsonQuery('user:greetingName', {
-  data: data, locals: locals
+  data: data, locals: helpers
 }).value //=> "Matt"
 
 jsonQuery(['is_fullscreen:and({is_playing}):then(?, ?)', "Playing big!", "Not so much"], {
-  data: data, locals: locals
+  data: data, locals: helpers
 }).value //=> "Not so much"
 
 jsonQuery(':text(This displays text cos we made it so)', {
-  locals: locals
+  locals: helpers
 }).value //=> "This displays text cos we made it so"
 
+```
+
+Or you could add a `select` helper:
+
+```js
+jsonQuery('people:select(name, country)', {
+  data: data,
+  locals: {
+    select: function (input) {
+      if (Array.isArray(input)) {
+        var keys = [].slice.call(arguments, 1)
+        return input.map(function (item) {
+          return Object.keys(item).reduce(function (result, key) {
+            if (~keys.indexOf(key)) {
+              result[key] = item[key]
+            }
+            return result
+          }, {})
+        })
+      }
+    }
+  }
+})
 ```
 
 ### Context
