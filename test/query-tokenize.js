@@ -2,32 +2,71 @@ require('es5-shim')
 
 var test = require('tape')
 var queryTokenizer = require('../lib/tokenize')
+var deepEqual = require('deep-equal')
+var util = require('util')
 
 test('query parsing', function(t){
 
   function check(query, expected){
     var tokenized = queryTokenizer(query, true)
     t.deepEqual(tokenized, expected)
+    if (!deepEqual(tokenized, expected)) {
+      console.log('expected:', util.inspect(expected, {depth: null}))
+      console.log('actual:', util.inspect(tokenized, {depth: null}))
+    }
   }
 
   check("items[id=1].name",[
     {root: true},
     {get: 'items'},
-    {select: ['id', '1']},
+    {select: ['id', '1'], op: '=', negate: false},
     {get: 'name'}
   ])
 
   check("items[*country=NZ].name",[
     {root: true},
     {get: 'items'},
-    {select: ['country', 'NZ'], multiple: true},
+    {select: ['country', 'NZ'], op: '=', negate: false, multiple: true},
     {get: 'name'}
+  ])
+
+  check("items[*][*stars>=3]",[
+    {root: true},
+    {get: 'items'},
+    {values: true},
+    {select: ['stars', '3'], op: '>=', negate: false, multiple: true}
+  ])
+
+  check("[* stars >= 3 & stars <= 10]",[
+    {root: true},
+    {select: [
+      {select: ['stars', '3'], op: '>=', negate: false},
+      {select: ['stars', '10'], op: '<=', negate: false, booleanOp: '&'}
+    ], multiple: true, boolean: true}
+  ])
+
+  check("items[*][*stars:gte(3)]",[
+    {root: true},
+    {get: 'items'},
+    {values: true},
+    {select: ['stars', {_sub: [
+      {filter: 'gte', args: ['3']}
+    ]}], op: ':', negate: false, multiple: true}
+  ])
+
+  check("items[*][*:isCool]",[
+    {root: true},
+    {get: 'items'},
+    {values: true},
+    {select: ['', {_sub: [
+      {filter: 'isCool'}
+    ]}], op: ':', negate: false, multiple: true}
   ])
 
   check("items[*name!~/^t/i].name",[
     {root: true},
     {get: 'items'},
-    {select: ['name', /^t/i], multiple: true, negate: true, regExp: true},
+    {select: ['name', /^t/i], multiple: true, negate: true, op: '~'},
     {get: 'name'}
   ])
 
@@ -35,7 +74,7 @@ test('query parsing', function(t){
   check(" items[id=1]\n  .name ",[
     {root: true},
     {get: 'items'},
-    {select: ['id', '1']},
+    {select: ['id', '1'], op: '=', negate: false},
     {get: 'name'}
   ])
 
@@ -43,7 +82,7 @@ test('query parsing', function(t){
   check(" items[id=1]\n  .name:not ",[
     {root: true},
     {get: 'items'},
-    {select: ['id', '1']},
+    {select: ['id', '1'], op: '=', negate: false},
     {get: 'name'},
     {filter:'not'}
   ])
@@ -52,7 +91,7 @@ test('query parsing', function(t){
     {root: true},
     {get: 'items'},
     {deep: [
-      {select: ['id', '1']},
+      {select: ['id', '1'], op: '=', negate: false},
       {get: 'name'}
     ]}
   ])
@@ -77,7 +116,7 @@ test('query parsing', function(t){
   check("items[id=?].name",[
     {root: true},
     {get: 'items'},
-    {select: ['id', {_param: 0}]},
+    {select: ['id', {_param: 0}], op: '=', negate: false},
     {get: 'name'}
   ])
 
@@ -88,7 +127,7 @@ test('query parsing', function(t){
       {root: true},
       {get: 'workitem'},
       {get: 'id'}
-    ]}]},
+    ]}], op: '=', negate: false},
     {get: 'name'}
   ])
 
@@ -127,7 +166,7 @@ test('query parsing', function(t){
     {get: 'items'},
     {select: ['id', {_sub: [
       {get: 'id'}
-    ]}]},
+    ]}], op: '=', negate: false},
     {get: 'name'}
   ])
 
@@ -137,13 +176,13 @@ test('query parsing', function(t){
     {select: ['parent_id', {_sub: [
       {root: true},
       {get: 'workitems'},
-      {select: [{_sub: [{get: 'id'}]}, {_param: 0}]}
-    ]}]},
+      {select: [{_sub: [{get: 'id'}]}, {_param: 0}], op: '=', negate: false}
+    ]}], op: '=', negate: false },
     {get: 'contacts'},
     {select: [{_param: 1}, {_sub: [
       {get: 'items'},
       {get: {_param: 2}}
-    ]}]},
+    ]}], op: '=', negate: false},
     {get: 'name'}
   ])
 

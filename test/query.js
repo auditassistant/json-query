@@ -8,6 +8,12 @@ var filters = {
     if (input.toUpperCase){
       return input.toUpperCase()
     }
+  },
+  isAnimal: function (input) {
+    return !!~['Cat', 'Dog', 'Chicken'].indexOf(input.name)
+  },
+  startsWithUppercase: function (input) {
+    return input.charAt(0) === input.charAt(0).toUpperCase()
   }
 }
 
@@ -25,6 +31,28 @@ var rootContext = {
     id: 3434,
     name: "Item",
     parent_id: 3
+  },
+  lookup: {
+    0: {
+      id: 0,
+      name: 'Item 0',
+      rating: 1
+    },
+    1: {
+      id: 1,
+      name: 'Item 1',
+      rating: 3
+    },
+    2: {
+      id: 2,
+      name: 'Item 2',
+      rating: 4
+    },
+    3: {
+      id: 3,
+      name: 'Item 3',
+      rating: 7
+    },
   },
   random_fields: {
     find_name: "Cat"
@@ -254,6 +282,53 @@ test('multiple selector', function (t) {
         key: 'items'
       }
     ], 'correct parents')
+    t.end()
+  })
+})
+
+test('get values of lookup', function (t) {
+  use(rootContext, 'lookup[*]', function (c, q) {
+    t.deepEqual(q.value, Object.keys(rootContext.lookup).map(function (key) {
+      return rootContext.lookup[key]
+    }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('compare operators', function (t) {
+  use(rootContext, 'lookup[*][*rating > 1]', function (c, q) {
+    t.deepEqual(q.value, Object.keys(rootContext.lookup).map(function (key) {
+      return rootContext.lookup[key]
+    }).filter(function (item) {
+      return item.rating > 1
+    }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('boolean select', function (t) {
+  use(rootContext, 'lookup[*][*rating > 1 & rating < 4]', function (c, q) {
+    t.deepEqual(q.value, Object.keys(rootContext.lookup).map(function (key) {
+      return rootContext.lookup[key]
+    }).filter(function (item) {
+      return item.rating > 1 && item.rating < 4
+    }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('filter select', function (t) {
+  use(rootContext, 'items[*:isAnimal]', function (c, q) {
+    t.deepEqual(q.value, rootContext.items.filter(function (item) {
+      return !!~['Cat', 'Dog', 'Chicken'].indexOf(item.name)
+    }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('filter select key', function (t) {
+  use(rootContext, 'items[*name:startsWithUppercase]', function (c, q) {
+    t.deepEqual(q.value, rootContext.items.slice(1), 'Correct Value')
     t.end()
   })
 })

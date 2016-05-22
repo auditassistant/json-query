@@ -13,8 +13,9 @@
     "test": "tape test/*.js --tap"
   },
   "devDependencies": {
-    "tape": "*",
-    "es5-shim": "~2.1.0"
+    "ava": "^0.14.0",
+    "es5-shim": "~2.1.0",
+    "tape": "*"
   },
   "optionalDependencies": {},
   "engines": {

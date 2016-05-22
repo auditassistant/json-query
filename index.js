@@ -68,6 +68,12 @@ function handleToken (token, state) {
     if (!state.currentItem && state.options.force) {
       state.force(state.options.force)
     }
+  } else if (token.values) {
+    var keys = Object.keys(state.currentItem)
+    var values = keys.map(function (key) {
+      return state.currentItem[key]
+    })
+    state.setCurrent(keys, values)
   } else if (token.get) {
     var key = state.getValue(token.get)
     if (shouldOverride(state, key)) {
@@ -90,15 +96,32 @@ function handleToken (token, state) {
       }
     }
   } else if (token.select) {
-    if (!state.options.allowRegexp && token.regExp) throw new Error('options.allowRegexp is not enabled.')
     if (Array.isArray(state.currentItem) || (state.options.force && state.force([]))) {
-      var selector = state.getValues(token.select)
-      var match = {
-        key: selector[0],
-        value: selector[1],
-        negate: token.negate,
-        regExp: token.regExp
-      }
+      var match = (token.boolean ? token.select : [token]).map(function (part) {
+        if (part.op === ':') {
+          var key = state.getValue(part.select[0])
+          return {
+            func: function (item) {
+              if (key) {
+                item = item[key]
+              }
+              return state.getValueFrom(part.select[1], item)
+            },
+            negate: part.negate,
+            booleanOp: part.booleanOp
+          }
+        } else {
+          var selector = state.getValues(part.select)
+          if (!state.options.allowRegexp && part.op === '~') throw new Error('options.allowRegexp is not enabled.')
+          return {
+            key: selector[0],
+            value: selector[1],
+            negate: part.negate,
+            booleanOp: part.booleanOp,
+            op: part.op
+          }
+        }
+      })
 
       if (token.multiple) {
         var keys = []
@@ -177,16 +200,37 @@ function handleToken (token, state) {
   }
 }
 
-function matches (item, opts) {
+function matches (item, parts) {
   var result = false
-  if (opts.regExp) {
-    result = !!item[opts.key].match(opts.value)
-  } else {
-    result = item[opts.key] == opts.value
-  }
+  for (var i = 0; i < parts.length; i++) {
+    var opts = parts[i]
+    var r = false
+    if (opts.func) {
+      r = opts.func(item)
+    } else if (opts.op === '~') {
+      r = !!item[opts.key].match(opts.value)
+    } else if (opts.op === '=') {
+      r = item[opts.key] == opts.value
+    } else if (opts.op === '>') {
+      r = item[opts.key] > opts.value
+    } else if (opts.op === '<') {
+      r = item[opts.key] < opts.value
+    } else if (opts.op === '>=') {
+      r = item[opts.key] >= opts.value
+    } else if (opts.op === '<=') {
+      r = item[opts.key] <= opts.value
+    }
 
-  if (opts.negate) {
-    result = !result
+    if (opts.negate) {
+      r = !r
+    }
+    if (opts.booleanOp === '&') {
+      result = result && r
+    } else if (opts.booleanOp === '|') {
+      result = result || r
+    } else {
+      result = r
+    }
   }
 
   return result

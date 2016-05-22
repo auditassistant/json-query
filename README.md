@@ -60,6 +60,10 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 
 `people[].name` => return all the names of people
 
+### Get all values of a lookup
+
+`lookup[*]`
+
 ### Array filter
 
 By default **only the first** matching item will be returned:
@@ -69,6 +73,14 @@ By default **only the first** matching item will be returned:
 But if you add an asterisk (`*`), **all** matching items will be returned:
 
 `people[*country=NZ]`
+
+You can use comparative operators:
+
+`people[*rating>=3]`
+
+Or use boolean logic:
+
+`people[* rating >= 3 & starred = true]`
 
 If `options.enableRegexp` is enabled, you can use the `~` operator to match `RegExp`:
 
@@ -191,6 +203,19 @@ jsonQuery('people:select(name, country)', {
           }, {})
         })
       }
+    }
+  }
+})
+```
+
+You can also use helper functions inside array filtering:
+
+```js
+jsonQuery('people[*:recentlyUpdated]', {
+  data: data,
+  locals: {
+    recentlyUpdated: function (item) {
+      return item.updatedAt < Date.now() - (30 * 24 * 60 * 60 * 1000)
     }
   }
 })
