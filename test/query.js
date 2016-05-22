@@ -22,7 +22,7 @@ var rootContext = {
     {id: 0, name: 'test',         group: 'A'},
     {id: 1, name: 'Another item', group: 'A'},
     {id: 2, name: 'Tickled',      group: 'A', description: "Financially"},
-    {id: 3, name: 'Cat',          group: 'B'},
+    {id: 3, name: 'Cat',          group: 'B', selected: true},
     {id: 4, name: 'Dog',          group: 'B'},
     {id: 5, name: 'Chicken',      group: 'B'}
   ],
@@ -302,6 +302,13 @@ test('compare operators', function (t) {
     }).filter(function (item) {
       return item.rating > 1
     }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('boolean match', function (t) {
+  use(rootContext, 'items[selected=true]', function (c, q) {
+    t.deepEqual(q.value, rootContext.items[3], 'Correct Value')
     t.end()
   })
 })

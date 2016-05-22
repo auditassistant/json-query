@@ -210,7 +210,11 @@ function matches (item, parts) {
     } else if (opts.op === '~') {
       r = !!item[opts.key].match(opts.value)
     } else if (opts.op === '=') {
-      r = item[opts.key] == opts.value
+      if ((item[opts.key] === true && opts.value === 'true') || (item[opts.key] === false && opts.value === 'false')) {
+        r = true
+      } else {
+        r = item[opts.key] == opts.value
+      }
     } else if (opts.op === '>') {
       r = item[opts.key] > opts.value
     } else if (opts.op === '<') {
