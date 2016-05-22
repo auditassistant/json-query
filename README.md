@@ -58,7 +58,7 @@ Queries are strings that describe an object or value to pluck out, or manipulate
 
 ### Array pluck
 
-`people[].name` => return all the names of people
+`people.name` => return all the names of people
 
 ### Get all values of a lookup
 
