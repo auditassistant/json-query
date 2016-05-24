@@ -17,6 +17,12 @@ var filters = {
   }
 }
 
+var helpers = {
+  get: function (input, key) {
+    return input[key]
+  }
+}
+
 var rootContext = {
   items: [
     {id: 0, name: 'test',         group: 'A'},
@@ -333,6 +339,13 @@ test('filter select', function (t) {
   })
 })
 
+test('filter on root', function (t) {
+  use(rootContext, ':get(current_item)', function (c, q) {
+    t.deepEqual(q.value, rootContext.current_item, 'Correct Value')
+    t.end()
+  })
+})
+
 test('filter select key', function (t) {
   use(rootContext, 'items[*name:startsWithUppercase]', function (c, q) {
     t.deepEqual(q.value, rootContext.items.slice(1), 'Correct Value')
@@ -377,7 +390,7 @@ test('negated multiple selector with array pluck', function (t) {
 })
 
 function use(context, query, tests){
-  var result = jsonQuery(query, {rootContext: context, filters: filters})
+  var result = jsonQuery(query, {rootContext: context, filters: filters, locals: helpers})
   tests(context, result)
 }
 
