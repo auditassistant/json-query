@@ -2,7 +2,7 @@
   "author": "Matt McKegg <matt@wetsand.co.nz> (http://twitter.com/MattMcKegg)",
   "name": "json-query",
   "description": "Retrieves values from JSON objects for data binding. Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic. Browserify compatible.",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "homepage": "http://github.com/mmckegg/json-query",
   "repository": {
     "type": "git",
