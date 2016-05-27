@@ -112,7 +112,7 @@ function handleToken (token, state) {
           }
         } else {
           var selector = state.getValues(part.select)
-          if (!state.options.allowRegexp && part.op === '~') throw new Error('options.allowRegexp is not enabled.')
+          if (!state.options.allowRegexp && part.op === '~' && selector[1] instanceof RegExp) throw new Error('options.allowRegexp is not enabled.')
           return {
             key: selector[0],
             value: selector[1],
@@ -208,7 +208,11 @@ function matches (item, parts) {
     if (opts.func) {
       r = opts.func(item)
     } else if (opts.op === '~') {
-      r = !!item[opts.key].match(opts.value)
+      if (opts.value instanceof RegExp) {
+        r = !!item[opts.key].match(opts.value)
+      } else {
+        r = !!~item[opts.key].indexOf(opts.value)
+      }
     } else if (opts.op === '=') {
       if ((item[opts.key] === true && opts.value === 'true') || (item[opts.key] === false && opts.value === 'false')) {
         r = true

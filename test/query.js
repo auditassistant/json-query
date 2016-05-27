@@ -32,6 +32,7 @@ var rootContext = {
     {id: 4, name: 'Dog',          group: 'B'},
     {id: 5, name: 'Chicken',      group: 'B'}
   ],
+  regexp: /^T/i,
   current_item: 3,
   workitem: {
     id: 3434,
@@ -163,13 +164,11 @@ test("RegExp filtering", function(t){
   t.end()
 })
 
-test("RegExp filtering whitout allowRegexp throw error", function(t){
-  try {
+test("RegExp filtering without allowRegexp throw error", function(t){
+  t.throws(function () {
     jsonQuery('items[name~/^T/].name', { rootContext: rootContext })
-  } catch(err) {
-    t.equal(err.message, 'options.allowRegexp is not enabled.')
-    t.end()
-  }
+  })
+  t.end()
 })
 
 test("RegExp filtering with mode", function(t){
@@ -179,7 +178,43 @@ test("RegExp filtering with mode", function(t){
   t.end()
 })
 
-test("Negate RegExp filtering", function(t){
+test("RegExp filtering using param", function(t) {
+  var query = 'items[name~{regexp}].name'
+  var result = jsonQuery(query, regExpOpts)
+  t.equal(result.value, 'test')
+
+  t.throws(function () {
+    jsonQuery(query, { rootContext: rootContext })
+  })
+
+  t.end()
+})
+
+test("Contains filtering", function(t) {
+  var query = 'items[name~item].name'
+  var result = jsonQuery(query, regExpOpts)
+  t.equal(result.value, 'Another item')
+
+  t.doesNotThrow(function () {
+    jsonQuery(query, { rootContext: rootContext })
+  })
+
+  t.end()
+})
+
+test("Contains filtering with param", function(t) {
+  var query = ['items[name~?].name', 'item']
+  var result = jsonQuery(query, regExpOpts)
+  t.equal(result.value, 'Another item')
+
+  t.doesNotThrow(function () {
+    jsonQuery(query, { rootContext: rootContext })
+  })
+
+  t.end()
+})
+
+test("Negate RegExp filtering", function(t) {
   var result = jsonQuery('items[name!~/^t/].name', regExpOpts)
 
   t.equal(result.value, 'Another item')

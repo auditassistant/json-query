@@ -70,6 +70,22 @@ test('query parsing', function(t){
     {get: 'name'}
   ])
 
+  check("items[*name!~test].name",[
+    {root: true},
+    {get: 'items'},
+    {select: ['name', 'test'], multiple: true, negate: true, op: '~'},
+    {get: 'name'}
+  ])
+
+  check("items[*name!~{param}].name",[
+    {root: true},
+    {get: 'items'},
+    {select: ['name', {
+      _sub: [ { root: true }, { get: 'param' } ]
+    }], multiple: true, negate: true, op: '~'},
+    {get: 'name'}
+  ])
+
   // test for whitespace handling
   check(" items[id=1]\n  .name ",[
     {root: true},
