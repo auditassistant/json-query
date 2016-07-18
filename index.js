@@ -69,11 +69,15 @@ function handleToken (token, state) {
       state.force(state.options.force)
     }
   } else if (token.values) {
-    var keys = Object.keys(state.currentItem)
-    var values = keys.map(function (key) {
-      return state.currentItem[key]
-    })
-    state.setCurrent(keys, values)
+    if (state.currentItem) {
+      var keys = Object.keys(state.currentItem)
+      var values = keys.map(function (key) {
+        return state.currentItem[key]
+      })
+      state.setCurrent(keys, values)
+    } else {
+      state.setCurrent(keys, [])
+    }
   } else if (token.get) {
     var key = state.getValue(token.get)
     if (shouldOverride(state, key)) {

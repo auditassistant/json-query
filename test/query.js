@@ -25,11 +25,11 @@ var helpers = {
 
 var rootContext = {
   items: [
-    {id: 0, name: 'test',         group: 'A'},
+    {id: 0, name: 'test',         group: 'A', items: [{name: 'test0'}]},
     {id: 1, name: 'Another item', group: 'A'},
     {id: 2, name: 'Tickled',      group: 'A', description: "Financially"},
     {id: 3, name: 'Cat',          group: 'B', selected: true},
-    {id: 4, name: 'Dog',          group: 'B'},
+    {id: 4, name: 'Dog',          group: 'B', items: [{name: 'test4'}]},
     {id: 5, name: 'Chicken',      group: 'B'}
   ],
   regexp: /^T/i,
@@ -332,6 +332,38 @@ test('get values of lookup', function (t) {
     t.deepEqual(q.value, Object.keys(rootContext.lookup).map(function (key) {
       return rootContext.lookup[key]
     }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('map values of items', function (t) {
+  use(rootContext, 'items[*].name', function (c, q) {
+    t.deepEqual(q.value, rootContext.items.map(function (item) {
+      return item.name
+    }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('map sub values of items', function (t) {
+  use(rootContext, 'items[*].items', function (c, q) {
+    t.deepEqual(q.value, [].concat.apply([], rootContext.items.map(function (item) {
+      return item.items
+    })).filter(function (x) { return x !== undefined }), 'Correct Value')
+    t.end()
+  })
+})
+
+test('handle missing sub values of items', function (t) {
+  use(rootContext, 'items[*].items.name', function (c, q) {
+    t.deepEqual(q.value, [ 'test0', 'test4' ], 'Correct Value')
+    t.end()
+  })
+})
+
+test('handle missing key with sub items', function (t) {
+  use(rootContext, 'notexist[*].items', function (c, q) {
+    t.deepEqual(q.value, [], 'Correct Value')
     t.end()
   })
 })
