@@ -15,9 +15,9 @@ $ npm install json-query
 var jsonQuery = require('json-query')
 ```
 
-### jsonQuery(query, options)
+### `jsonQuery(query, options)`
 
-Specify a query and what to query - returns an object that describes the result of the query.
+Specify a query and what to query. Returns an object that describes the result of the query.
 
 ```js
 
@@ -34,15 +34,15 @@ jsonQuery('people[country=NZ].name', {
 }) //=> {value: 'Matt', parents: [...], key: 0} ... etc
 ```
 
-#### options:
+#### Options:
 
-- **data** or **rootContext**: The main JS object to query.
-- **source** or **context** (optional): The current object we're interested in. Is accessed in query by starting with `.`
-- **parent** (optional): An additional context for looking further up the tree. Is accessed by `..`
-- **locals**: Specify an object containing helper functions. Accessed by ':filterName'. Expects function(input, args...) with `this` set to original passed in options.
-- **globals**: Falls back to globals when no local function found.
-- **force** (optional): Specify an object to be returned from the query if the query fails - it will be saved into the place the query expected the object to be.
-- **allowRegexp** (optional): enable `~` operator. Before enabling regexp match to anyone, consider the [user defined regular expression security concerns](http://stackoverflow.com/questions/20928677/user-defined-regular-expression-security-concerns).
+- **`data`** or **`rootContext`**: The main object to query.
+- **`source`** or **`context`** (optional): The current object we're interested in. Accessed in query with `.`.
+- **`parent`** (optional): An additional context for looking further up the tree. Accessed by `..`.
+- **`locals`**: Specify an object containing helper functions. Accessed by `':filterName'`. Expects `function(input, args...)` with `this` set to original passed in options.
+- **`globals`**: Falls back to globals when no local function found.
+- **`force`** (optional): Specify an object to be returned from the query if the query fails. It will be saved into the place the query expected the object to be.
+- **`allowRegexp`** (optional): Enable the `~` operator. Before enabling regexp match to anyone, consider the [user defined regular expression security concerns](http://stackoverflow.com/questions/20928677/user-defined-regular-expression-security-concerns).
 
 ## Queries
 
@@ -96,7 +96,7 @@ You can also **negate** any of the above examples by adding a `!` before the `=`
 
 ### Deep queries
 
-Search through multiple levels of Objects/Arrays
+Search through multiple levels of Objects/Arrays:
 
 ```js
 var data = {
@@ -134,7 +134,7 @@ jsonQuery('comments_lookup[{page.id}]', {data: data})
 
 ### Local functions (helpers)
 
-Allows to to hack the query system to do just about anything.
+Allows you to hack the query system to do just about anything.
 
 Some nicely contrived examples:
 
@@ -223,7 +223,7 @@ jsonQuery('people[*:recentlyUpdated]', {
 
 ### Context
 
-Specifying context ('data', 'source', and 'parent' options) is good for databinding and working on a specific object and still keeping the big picture available.
+Specifying context (`data`, `source`, and `parent` options) is good for databinding and working on a specific object and still keeping the big picture available.
 
 ```js
 var data = {
@@ -247,7 +247,7 @@ data.paragraphs.forEach(function(paragraph){
 
 ## Query Params
 
-Params can be specified by passing in an array with the first param the query (with ? params) and subsequent params.
+Params can be specified by passing in an array with the first param the query (with `?` params) and subsequent params.
 
 ```js
 jsonQuery(['people[country=?]', 'NZ'])
