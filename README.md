@@ -103,15 +103,28 @@ var data = {
   grouped_people: {
     'friends': [
       {name: 'Steve', country: 'NZ'},
-      {name: 'Bob', country: 'US'}
+      {name: 'Jane', country: 'US'},
+      {name: 'Mike', country: 'AU'},
+      {name: 'Mary', country: 'NZ'},
     ],
     'enemies': [
       {name: 'Evil Steve', country: 'AU'}
+      {name: 'Betty', country: 'NZ'},
     ]
   }
 }
 
-jsonQuery('grouped_people[**][*country=NZ]', {data: data})
+var result = jsonQuery('grouped_people[**][*country=NZ]', {data: data}).value
+```
+
+The `result` will be:
+
+```js
+[
+  {name: 'Steve', country: 'NZ'},
+  {name: 'Mary', country: 'NZ'},
+  {name: 'Betty', country: 'NZ'}
+]
 ```
 
 ### Inner queries
