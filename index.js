@@ -71,8 +71,15 @@ function handleToken (token, state) {
   } else if (token.values) {
     if (state.currentItem) {
       var keys = Object.keys(state.currentItem)
-      var values = keys.map(function (key) {
-        return state.currentItem[key]
+      var values = []
+      keys.forEach(function (key) {
+        if (token.deep && Array.isArray(state.currentItem[key])) {
+          state.currentItem[key].forEach(function (item) {
+            values.push(item)
+          })
+        } else {
+          values.push(state.currentItem[key])
+        }
       })
       state.setCurrent(keys, values)
     } else {
@@ -215,6 +222,7 @@ function matches (item, parts) {
       if (opts.value instanceof RegExp) {
         r = !!item[opts.key].match(opts.value)
       } else {
+        console.log(opts.key, item)
         r = !!~item[opts.key].indexOf(opts.value)
       }
     } else if (opts.op === '=') {

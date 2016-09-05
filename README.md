@@ -96,7 +96,7 @@ You can also **negate** any of the above examples by adding a `!` before the `=`
 
 ### Deep queries
 
-Search through multiple levels of Objects/Arrays:
+Search through multiple levels of Objects/Arrays using `[**]`:
 
 ```js
 var data = {
@@ -111,8 +111,9 @@ var data = {
   }
 }
 
-jsonQuery('grouped_people[][country=NZ]', {data: data})
+jsonQuery('grouped_people[**][*country=NZ]', {data: data})
 ```
+
 ### Inner queries
 
 ```js

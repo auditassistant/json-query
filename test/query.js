@@ -140,6 +140,16 @@ test("Iterating key query with cross context param", function(t){
   })
 })
 
+test("Deep query to list all sub arrays of lookup", function(t){
+  var result = jsonQuery('grouped_stuff[**]', {
+    rootContext: rootContext, filters: filters
+  })
+
+  t.deepEqual(result.value, rootContext.grouped_stuff.group_a.concat(rootContext.grouped_stuff.group_b), "Correct Value")
+  t.end()
+})
+
+
 test("Deep query with iterating key query and specified param", function(t){
   var result = jsonQuery(['grouped_stuff[][id=?].name', 347], {
     rootContext: rootContext, filters: filters

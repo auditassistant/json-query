@@ -112,6 +112,12 @@ test('query parsing', function(t){
     ]}
   ])
 
+  check("lookup[**]",[
+    {root: true},
+    {get: 'lookup'},
+    {values: true, deep: true}
+  ])
+
   check("item.title|item.name",[
     {root: true},
     {get: 'item'},
