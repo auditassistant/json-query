@@ -220,10 +220,10 @@ function matches (item, parts) {
       r = opts.func(item)
     } else if (opts.op === '~') {
       if (opts.value instanceof RegExp) {
-        r = !!item[opts.key].match(opts.value)
+        r = item[opts.key] && !!item[opts.key].match(opts.value)
       } else {
         console.log(opts.key, item)
-        r = !!~item[opts.key].indexOf(opts.value)
+        r = item[opts.key] && !!~item[opts.key].indexOf(opts.value)
       }
     } else if (opts.op === '=') {
       if ((item[opts.key] === true && opts.value === 'true') || (item[opts.key] === false && opts.value === 'false')) {

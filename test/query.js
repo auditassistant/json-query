@@ -174,6 +174,13 @@ test("RegExp filtering", function(t){
   t.end()
 })
 
+test("RegExp filtering - nonexisting key", function(t){
+  var result = jsonQuery('items[surname~/^T/].name', regExpOpts)
+
+  t.equal(result.value, null)
+  t.end()
+})
+
 test("RegExp filtering without allowRegexp throw error", function(t){
   t.throws(function () {
     jsonQuery('items[name~/^T/].name', { rootContext: rootContext })
