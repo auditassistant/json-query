@@ -222,7 +222,6 @@ function matches (item, parts) {
       if (opts.value instanceof RegExp) {
         r = item[opts.key] && !!item[opts.key].match(opts.value)
       } else {
-        console.log(opts.key, item)
         r = item[opts.key] && !!~item[opts.key].indexOf(opts.value)
       }
     } else if (opts.op === '=') {
