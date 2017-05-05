@@ -3,6 +3,7 @@ json-query
 
 Retrieves values from JSON objects for data binding. Offers params, nested queries, deep queries, custom reduce/filter functions and simple boolean logic.
 
+Go to the [demo website](https://maxleiko.github.io/json-query-tester/) to test it in your browser directly!
 ## Install via [npm](https://www.npmjs.com/package/json-query)
 
 ```bash
