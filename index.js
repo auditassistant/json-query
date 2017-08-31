@@ -65,7 +65,7 @@ function handleToken (token, state) {
 
   if (token == null) {
     // process end of query
-    if (!state.currentItem && state.options.force) {
+    if (typeof state.currentItem === "undefined" && state.options.force) {
       state.force(state.options.force)
     }
   } else if (token.values) {
