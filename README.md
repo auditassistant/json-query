@@ -255,8 +255,8 @@ var data = {
 var pageHtml = ''
 data.paragraphs.forEach(function(paragraph){
   var style = jsonQuery('styles[{.style}]', {data: data, source: paragraph}).value
-  var content = jsonQuery('.content', data: data, source: paragraph) // pretty pointless :)
-  pageHtml += "<p style='" + style "'>" + content + "</p>"
+  var content = jsonQuery('.content', {data: data, source: paragraph}).value; // pretty pointless :)
+  pageHtml += "<p style='" + style + "'>" + content + "</p>";
 })
 ```
 
